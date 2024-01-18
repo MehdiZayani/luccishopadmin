@@ -53,23 +53,35 @@ const plugins = [
     },
   },
    // ...
-   {
+  // ...
+  {
     resolve: `medusa-plugin-meilisearch`,
     options: {
+      config: {
+        host: process.env.MEILISEARCH_HOST,
+        apiKey: process.env.MEILISEARCH_API_KEY,
       // other options...
-    settings: {
-      indexName: {
-        indexSettings: {
-          searchableAttributes,
-          displayedAttributes,
-        },
-        primaryKey,
-        transformer: (product) => ({
-          id: product.id, 
-          // other attributes...
-        }),
       },
-    },
+      settings: {
+        products: {
+          indexSettings: {
+            searchableAttributes: [
+              "title", 
+              "description",
+              "variant_sku",
+            ],
+            displayedAttributes: [
+              "id", 
+              "title", 
+              "description", 
+              "variant_sku", 
+              "thumbnail", 
+              "handle",
+            ],
+          },
+          primaryKey: "id",
+        },
+      },
     },
   },
 
@@ -103,7 +115,15 @@ const projectConfig = {
 
 /** @type {import('@medusajs/medusa').ConfigModule} */
 module.exports = {
-  projectConfig,
+  projectConfig: {
+    // ...
+    database_extra: process.env.NODE_ENV !== "development" ?
+      {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      } : {},
+  },
   plugins,
   modules,
 };

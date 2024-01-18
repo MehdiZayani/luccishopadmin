@@ -117,6 +117,7 @@ const projectConfig = {
 module.exports = {
   projectConfig: {
     // ...
+    jwt_secret: process.env.JWT_SECRET,
     database_extra: process.env.NODE_ENV !== "development" ?
       {
         ssl: {
